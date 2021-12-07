@@ -69,12 +69,20 @@ function AuthProvider({children}){
         });
     }
 
+    async function signOut(){
+        await firebase.auth().signOut();
+        await AsyncStorageLib.clear()
+        .then(()=>{
+            setUser(null);
+        });
+    }
+
     async function storageUser(data){
         await AsyncStorageLib.setItem('Auth_user', JSON.stringify(data));
     }
 
     return(
-        <AuthContext.Provider value={{ signed: !!user, user, signUp, signIn, loading }}>
+        <AuthContext.Provider value={{ signed: !!user, user, signUp, signIn, signOut, loading }}>
             {children}
         </AuthContext.Provider>   
        );
