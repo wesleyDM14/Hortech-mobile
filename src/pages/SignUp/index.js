@@ -1,4 +1,5 @@
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
+import { AuthContext } from '../../contexts/auth';
 import {
   Background,
   Container,
@@ -15,7 +16,12 @@ export default function SignUp() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [nome, setNome] = useState('');
+  const { signUp } = useContext(AuthContext);
 
+  function handleSignUp(){
+    signUp(email, password, nome);
+  }
+  
  return (
    <Background>
      <Container>
@@ -48,7 +54,7 @@ export default function SignUp() {
         onChangeText = {(text)=> setPassword(text)}
         />
        </AreaInput>
-       <SubmitButton>
+       <SubmitButton onPress={handleSignUp}>
          <SubmitText>Criar Conta</SubmitText>
        </SubmitButton>
      </Container>
