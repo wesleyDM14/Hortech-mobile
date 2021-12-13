@@ -3,7 +3,7 @@ import styled from 'styled-components/native';
 export const Background = styled.View`
     flex: 1;
     background-color: #ffffff;
-
+    padding-top: 100px;
 `;
 
 export const Container = styled.KeyboardAvoidingView`

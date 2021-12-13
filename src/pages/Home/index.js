@@ -1,17 +1,23 @@
 import React, { useContext } from 'react';
-import { View, Text, Button } from 'react-native';
+import { 
+  Background, 
+  Container,
+  Nome
+} from './styles';
+import Header from '../../components/Header';
 
 import { AuthContext } from '../../contexts/auth';
 
 export default function Home() {
-  const {user, signOut} = useContext(AuthContext);
- return (
-   <View>
-       <Text>Home</Text>
-       <Button 
-        title='Sair'
-        onPress={()=>signOut()}
-       />
-   </View>
+  const {user} = useContext(AuthContext);
+  let userFristName = user.nome.split(' ')[0];
+
+  return (
+    <Background>
+      <Container>
+        <Header title={'Hortech App'}/>
+        <Nome>Bem Vindo, {userFristName}</Nome>
+      </Container>
+    </Background>
   );
 }
