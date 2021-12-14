@@ -43,7 +43,7 @@ export default function Solo() {
                 </HeaderContainer>
                 {
                     loading ?(
-                        <ActivityIndicator size={100} color="#000" style={{marginTop: 30}}/>
+                        <ActivityIndicator size={100} color="#00FF41" style={{marginTop: 30}}/>
                     ):(
                         <SolosList
                             showsVerticalScrollIndicator={false}

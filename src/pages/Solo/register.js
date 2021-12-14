@@ -90,7 +90,7 @@ export default function RegisterSolo() {
                         <AreaInput>
                             <Input 
                                 placeholder="Composição"
-                                autoCorrect={true}
+                                autoCorrect={false}
                                 value= {composicao}
                                 returnKeyType = 'next'
                                 multiline = {true}

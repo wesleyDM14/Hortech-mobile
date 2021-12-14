@@ -10,6 +10,7 @@ function CrudProvider({ children }){
     const [loading, setLoading] = useState(true);
     const [solosList, setSolosList] = useState([]);
     const [culturasList, setCulturasList] = useState([]);
+    const [plantacoesList, setPlantacoesList] = useState([]);
 
     async function handleAddSolo(nome, ph, composicao){
         setLoading(true);
@@ -136,12 +137,83 @@ function CrudProvider({ children }){
         });
       }
 
+      async function handleAddPlantacao(nome, localidade, quantidadeCultura, cultura, solo){
+        setLoading(true);
+        let uid = user.uid;
+        let key = await firebase.database().ref('plantacao').child(uid).push().key;
+        await firebase.database().ref('plantacao').child(uid).child(key).set({
+              nome: nome,
+              localidade: localidade,
+              quantidadeCultura: quantidadeCultura,
+              cultura: cultura,
+              solo: solo
+          })
+          .then(()=>{
+              alert('Plantação Cadastrada com sucesso!');
+              setLoading(false);
+          }).catch((error)=>{
+              alert(error.code);
+              setLoading(false);
+          });
+      }
+
+      async function handleLoadPlantacao(){
+        setLoading(true);
+        let uid = user.uid;
+        await firebase.database().ref('plantacao').child(uid).orderByChild('nome')
+          .on('value',(snapshot)=>{
+            setPlantacoesList([]);
+            snapshot.forEach((childItem)=>{
+                let list ={
+                    key: childItem.key,
+                    nome: childItem.val().nome,
+                    localidade: childItem.val().localidade,
+                    quantidadeCultura: childItem.val().quantidadeCultura,
+                    cultura: childItem.val().cultura,
+                    solo: childItem.val().solo
+                }
+                setPlantacoesList(oldArray => [...oldArray, list]);
+            })
+                setLoading(false);
+            })
+      }
+
+      async function handleDeletePlantacao(key){
+        let uid = user.uid;
+        await firebase.database().ref('plantacao').child(uid).child(key).remove()
+        .then(()=>{
+            alert('Plantação excluida com sucesso.')
+        }).catch((error)=>{
+            alert(error.code);
+        })
+      }
+
+      async function handleUpdatePlantacao(nome, localidade, quantidadeCultura, cultura, solo, key){
+        setLoading(true);
+        let uid = user.uid;
+        await firebase.database().ref('plantacao').child(uid).child(key).set({
+            nome: nome,
+            localidade: localidade,
+            quantidadeCultura: quantidadeCultura,
+            cultura: cultura,
+            solo: solo
+        })
+        .then(()=>{
+                alert('Plantação Editada Com Sucesso.');
+                setLoading(false);
+        }).catch((error)=> {
+                alert(error.code);
+                setLoading(false);
+        });
+      }
+
     return(
         <CrudContext.Provider value={{
             loading, handleAddSolo, handleLoadSolo, solosList, 
             handleDeleteSolo, handleUpdateSolo, handleAddCultura,
             handleLoadCultura, culturasList, handleDeleteCultura,
-            handleUpdateCultura 
+            handleUpdateCultura, handleLoadPlantacao, handleAddPlantacao,
+            handleDeletePlantacao, handleUpdatePlantacao, plantacoesList
         }}>
             {children}
         </CrudContext.Provider>

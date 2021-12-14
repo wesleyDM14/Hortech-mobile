@@ -42,7 +42,7 @@ export default function Cultura() {
                 </HeaderContainer>
                 {
                     loading ?(
-                        <ActivityIndicator size={100} color="#000" style={{marginTop: 30}}/>
+                        <ActivityIndicator size={100} color="#00FF41" style={{marginTop: 30}}/>
                     ):(
                         <CulturasList
                             showsVerticalScrollIndicator={false}
