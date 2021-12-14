@@ -13,15 +13,12 @@ function AuthProvider({children}){
     useEffect(()=>{
         async function loadStorage(){
             const storageUser = await AsyncStorageLib.getItem('Auth_user');
-
             if(storageUser){
                 setUser(JSON.parse(storageUser));
                 setLoading(false);
             }
-
             setLoading(false);
         }
-
         loadStorage();
     }, []);
 
