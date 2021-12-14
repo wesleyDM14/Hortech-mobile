@@ -16,26 +16,26 @@ import {
     SubmitButton,
     SubmitText
 } from './styles';
+import { Picker } from '@react-native-picker/picker';
 import {CrudContext} from '../../contexts/crud';
 import { useNavigation } from '@react-navigation/native';
 
-export default function RegisterSolo() {
+export default function RegisterCultura() {
 
     const [nome, setNome] = useState('');
-    const [ph, setPh] = useState('');
-    const [composicao, setComposicao] = useState('');
+    const [classificacao, setClassificacao] = useState('briofita');
 
     const navigation = useNavigation();
-    const {loading, handleAddSolo } = useContext(CrudContext);
+    const { handleAddCultura, loading } = useContext(CrudContext);
 
     function handleSubmit(){
         Keyboard.dismiss();
-        if(nome==''||ph==''||composicao==''){
+        if(nome==''||classificacao==''){
             alert('Preencha todos os campos!');
             return;
         }
         Alert.alert(
-            'Cadastrar Solo',
+            'Cadastrar Cultura',
             `nome: ${nome}`,
             [
                 {
@@ -51,20 +51,20 @@ export default function RegisterSolo() {
     }
 
     async function handleAdd(){
-        await handleAddSolo(nome, ph, composicao);
+        await handleAddCultura(nome, classificacao);
         navigation.goBack();
     }
 
  return (
-    <TouchableWithoutFeedback onPress={()=> Keyboard.dismiss()}>
-        <Background>
-            <SafeAreaView>
+   <TouchableWithoutFeedback onPress={()=> Keyboard.dismiss()}>
+       <Background>
+           <SafeAreaView>
                 <ScrollView style={{
                     keyboardDismissMode: 'on-drag',
                     centerContent: 'true'
                 }}>
-                    <Container>
-                        <LogoText>Cadastrar Novo Solo</LogoText>
+                   <Container>
+                        <LogoText>Cadastrar Nova Cultura</LogoText>
                         <AreaInput>
                             <Input 
                                 placeholder="Nome"
@@ -75,36 +75,32 @@ export default function RegisterSolo() {
                                 onSubmitEditing={()=> Keyboard.dismiss()}
                             />
                         </AreaInput>
-                        <AreaInput>
-                            <Input 
-                                placeholder="Ph"
-                                autoCorrect={false}
-                                keyboardType='numeric'
-                                returnKeyType = 'next'
-                                maxLength={3}
-                                value = {ph}
-                                onChangeText = {(text)=>setPh(text)}
-                                onSubmitEditing={()=> Keyboard.dismiss()}
-                            />
-                        </AreaInput>
-                        <AreaInput>
-                            <Input 
-                                placeholder="Composição"
-                                autoCorrect={true}
-                                value= {composicao}
-                                returnKeyType = 'next'
-                                multiline = {true}
-                                onChangeText = {(text)=>setComposicao(text)}
-                                onSubmitEditing={()=> Keyboard.dismiss()}
-                            />
-                        </AreaInput>
+                        <Picker
+                            selectedValue={classificacao}
+                            onValueChange={(itemValue, itemIndex)=>
+                                setClassificacao(itemValue)
+                            }
+                            mode='dropdown'
+                            style={{
+                                width: '90%',
+                                borderWidth: 1,
+                                backgroundColor: 'rgba(0,0,0,0.20)',
+                                marginBottom: 10,
+                                borderRadius: 7
+                            }}
+                        >
+                            <Picker.Item label="Briófita" value="briofita" />
+                            <Picker.Item label="Pteridófita " value="pteridofita" />
+                            <Picker.Item label="Gimnosperma " value="gimnosperma" />
+                            <Picker.Item label="Angiosperma " value="angiosperma" />
+                        </Picker>
                         <SubmitButton onPress={handleSubmit}>
                             <SubmitText>Cadastrar</SubmitText>
                         </SubmitButton>
-                    </Container>
-                </ScrollView>
-            </SafeAreaView>
-        </Background>
-    </TouchableWithoutFeedback>
+                   </Container>
+               </ScrollView>
+           </SafeAreaView>
+       </Background>
+   </TouchableWithoutFeedback>
   );
 }

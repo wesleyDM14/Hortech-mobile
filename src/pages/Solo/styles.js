@@ -30,7 +30,7 @@ export const HeaderContainer = styled.View`
 export const AreaInput = styled.View`
     flex-direction: row;
 `;
-
+ 
 export const Input = styled.TextInput.attrs({
     placeholderTextColor:'rgba(0,0,0,0.6)'
 })`

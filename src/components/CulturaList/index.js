@@ -4,20 +4,20 @@ import{
     Button,
     Nome,
     DeleteButton
-} from './styles';
-import {CrudContext} from '../../contexts/crud';
+} from '../SoloList/styles';
+import { CrudContext } from '../../contexts/crud';
 import { Alert } from 'react-native';
 import Icon from 'react-native-vector-icons/EvilIcons';
 import { useNavigation } from '@react-navigation/native';
 
-export default function SoloList({data}) {
+export default function CulturaList({data}) {
 
-    const { handleDeleteSolo } = useContext(CrudContext);
+    const { handleDeleteCultura } = useContext(CrudContext);
     const navigation = useNavigation();
 
     function handleConfirm(){
         Alert.alert(
-            'Excluir Solo',
+            'Excluir Cultura',
             `nome: ${data.nome}`,
             [
                 {
@@ -34,12 +34,12 @@ export default function SoloList({data}) {
 
     async function handleDelete(){
         let key = data.key;
-        await handleDeleteSolo(key);
+        await handleDeleteCultura(key);
     }
 
     return (
         <Container>
-            <Button onPress={()=> navigation.navigate('UpdateSolo',{data: data} )}>
+            <Button onPress={()=> navigation.navigate('UpdateCultura',{data: data} )}>
                 <Nome>{data.nome}</Nome>
             </Button>
             <DeleteButton onPress = {handleConfirm}>
@@ -47,4 +47,4 @@ export default function SoloList({data}) {
             </DeleteButton>
         </Container>
        );
-}
+} 

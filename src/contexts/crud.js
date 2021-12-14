@@ -9,8 +9,10 @@ function CrudProvider({ children }){
     const {user} = useContext(AuthContext);
     const [loading, setLoading] = useState(true);
     const [solosList, setSolosList] = useState([]);
+    const [culturasList, setCulturasList] = useState([]);
 
     async function handleAddSolo(nome, ph, composicao){
+        setLoading(true);
         let uid = user.uid;
         let key = await firebase.database().ref('solo').child(uid).push().key;
         await firebase.database().ref('solo').child(uid).child(key).set({
@@ -73,8 +75,74 @@ function CrudProvider({ children }){
             });
       }
 
+      async function handleAddCultura(nome, classificacao){
+          setLoading(true);
+          let uid = user.uid;
+          let key = await firebase.database().ref('cultura').child(uid).push().key;
+          await firebase.database().ref('cultura').child(uid).child(key).set({
+                nome: nome,
+                classificacao: classificacao
+            })
+            .then(()=>{
+                alert('Cultura Cadastrada com sucesso!');
+                setLoading(false);
+            }).catch((error)=>{
+                alert(error.code);
+                setLoading(false);
+            });
+      }
+
+      async function handleLoadCultura(){
+        setLoading(true);
+        let uid = user.uid;
+        await firebase.database().ref('cultura').child(uid).orderByChild('nome')
+          .on('value',(snapshot)=>{
+            setCulturasList([]);
+            snapshot.forEach((childItem)=>{
+                let list ={
+                    key: childItem.key,
+                    nome: childItem.val().nome,
+                    classificacao: childItem.val().classificacao
+                }
+                setCulturasList(oldArray => [...oldArray, list]);
+            })
+                setLoading(false);
+            })
+      }
+
+      async function handleDeleteCultura(key){
+        let uid = user.uid;
+        await firebase.database().ref('cultura').child(uid).child(key).remove()
+        .then(()=>{
+            alert('Cultura excluida com sucesso.')
+        }).catch((error)=>{
+            alert(error.code);
+        })
+      }
+
+      async function handleUpdateCultura(nome, classificacao, key){
+        setLoading(true);
+        let uid = user.uid;
+        await firebase.database().ref('cultura').child(uid).child(key).set({
+                nome: nome,
+                classificacao: classificacao
+        })
+        .then(()=>{
+                alert('Cultura Editada Com Sucesso.');
+                setLoading(false);
+        }).catch((error)=> {
+                alert(error.code);
+                setLoading(false);
+        });
+      }
+
     return(
-        <CrudContext.Provider value={{loading, handleAddSolo, handleLoadSolo, solosList, handleDeleteSolo, handleUpdateSolo }}>
+        <CrudContext.Provider value={{
+            loading, handleAddSolo, handleLoadSolo, solosList, 
+            handleDeleteSolo, handleUpdateSolo, handleAddCultura,
+            handleLoadCultura, culturasList, handleDeleteCultura,
+            handleUpdateCultura 
+        }}>
             {children}
         </CrudContext.Provider>
     );

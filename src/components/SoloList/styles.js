@@ -7,7 +7,7 @@ export const Container = styled.View`
     align-items: center;
 `;
 
-export const SoloButton = styled.TouchableOpacity`
+export const Button = styled.TouchableOpacity`
     justify-content: center;
     padding: 5px;
     align-items: center;
@@ -18,7 +18,7 @@ export const SoloButton = styled.TouchableOpacity`
     margin-left: 15px;
 `;
 
-export const SoloNome = styled.Text`
+export const Nome = styled.Text`
     font-weight: bold;
     font-size: 18px;
     color: rgb(0,0,0);

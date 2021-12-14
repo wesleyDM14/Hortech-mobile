@@ -19,24 +19,23 @@ import {
     CancelText
 } from './styles';
 import {CrudContext} from '../../contexts/crud';
+import { Picker } from '@react-native-picker/picker';
 
-export default function UpdateSolo({route, navigation}) {
+export default function UpdateCultura({route, navigation}) {
 
     const {data} = route.params;
     const [nome, setNome] = useState(data.nome);
-    const [ph, setPh] = useState(data.ph);
-    const [composicao, setComposicao] = useState(data.composicao);
-
-    const { loading, handleUpdateSolo } = useContext(CrudContext);
+    const [classificacao, setClassificacao] = useState(data.classificacao);
+    const { loading, handleUpdateCultura } = useContext(CrudContext);
 
     function handleSubmit(){
         Keyboard.dismiss();
-        if(nome==''||ph==''||composicao==''){
+        if(nome==''||classificacao==''){
             alert('Preencha todos os campos!');
             return;
         }
         Alert.alert(
-            'Editar Solo',
+            'Editar Cultura',
             `nome: ${nome}`,
             [
                 {
@@ -53,7 +52,7 @@ export default function UpdateSolo({route, navigation}) {
 
     async function handleConfirm(){
         let key = data.key;
-        await handleUpdateSolo(nome, ph, composicao, key);
+        await handleUpdateCultura(nome, classificacao, key);
         navigation.goBack();
     }
 
@@ -66,7 +65,7 @@ export default function UpdateSolo({route, navigation}) {
                     centerContent: 'true'
                 }}>
                     <Container>
-                        <LogoText>Editar Solo</LogoText>
+                        <LogoText>Editar Cultura</LogoText>
                         <AreaInput>
                             <Input 
                                 placeholder="Nome"
@@ -77,29 +76,25 @@ export default function UpdateSolo({route, navigation}) {
                                 onSubmitEditing={()=> Keyboard.dismiss()}
                             />
                         </AreaInput>
-                        <AreaInput>
-                            <Input 
-                                placeholder="Ph"
-                                autoCorrect={false}
-                                keyboardType='numeric'
-                                returnKeyType = 'next'
-                                maxLength={3}
-                                value = {ph}
-                                onChangeText = {(text)=>setPh(text)}
-                                onSubmitEditing={()=> Keyboard.dismiss()}
-                            />
-                        </AreaInput>
-                        <AreaInput>
-                            <Input 
-                                placeholder="Composição"
-                                autoCorrect={false}
-                                value= {composicao}
-                                returnKeyType = 'next'
-                                multiline = {true}
-                                onChangeText = {(text)=>setComposicao(text)}
-                                onSubmitEditing={()=> Keyboard.dismiss()}
-                            />
-                        </AreaInput>
+                        <Picker
+                            selectedValue={classificacao}
+                            onValueChange={(itemValue, itemIndex)=>
+                                setClassificacao(itemValue)
+                            }
+                            mode='dropdown'
+                            style={{
+                                width: '90%',
+                                borderWidth: 1,
+                                backgroundColor: 'rgba(0,0,0,0.20)',
+                                marginBottom: 10,
+                                borderRadius: 7
+                            }}
+                        >
+                            <Picker.Item label="Briófita" value="briofita" />
+                            <Picker.Item label="Pteridófita " value="pteridofita" />
+                            <Picker.Item label="Gimnosperma " value="gimnosperma" />
+                            <Picker.Item label="Angiosperma " value="angiosperma" />
+                        </Picker>
                         <SubmitButton onPress={handleSubmit}>
                             <SubmitText>Editar</SubmitText>
                         </SubmitButton>

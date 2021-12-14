@@ -9,6 +9,8 @@ import Plantacao from '../pages/Plantacao';
 
 import RegisterSolo from '../pages/Solo/register';
 import UpdateSolo from '../pages/Solo/update';
+import RegisterCultura from '../pages/Cultura/register';
+import UpdateCultura from '../pages/Cultura/update';
 
 import CrudProvider from '../contexts/crud';
 
@@ -40,12 +42,54 @@ function AppRoutes(){
                 <AppStack.Screen 
                     name="RegisterSolo"
                     component={RegisterSolo}
-                    options={{headerShown: false}}
+                    options={{
+                        headerStyle:{
+                            backgroundColor: '#00b94a',
+                            borderBottomWidth: 1
+                        },
+                        headerTintColor: '#FFF',
+                        headerBackTitleVisible: false,
+                        headerTitle: 'Voltar'
+                    }}
                 />
                 <AppStack.Screen 
                     name="UpdateSolo"
                     component={UpdateSolo}
-                    options={{headerShown: false}}
+                    options={{
+                        headerStyle:{
+                            backgroundColor: '#00b94a',
+                            borderBottomWidth: 1
+                        },
+                        headerTintColor: '#FFF',
+                        headerBackTitleVisible: false,
+                        headerTitle: 'Voltar'
+                    }}
+                />
+                <AppStack.Screen 
+                    name="RegisterCultura"
+                    component={RegisterCultura}
+                    options={{
+                        headerStyle:{
+                            backgroundColor: '#00b94a',
+                            borderBottomWidth: 1
+                        },
+                        headerTintColor: '#FFF',
+                        headerBackTitleVisible: false,
+                        headerTitle: 'Voltar'
+                    }}
+                />
+                <AppStack.Screen 
+                    name="UpdateCultura"
+                    component={UpdateCultura}
+                    options={{
+                        headerStyle:{
+                            backgroundColor: '#00b94a',
+                            borderBottomWidth: 1
+                        },
+                        headerTintColor: '#FFF',
+                        headerBackTitleVisible: false,
+                        headerTitle: 'Voltar'
+                    }}
                 />
             </AppStack.Navigator>
         </CrudProvider>
