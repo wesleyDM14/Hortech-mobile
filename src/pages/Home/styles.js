@@ -15,3 +15,18 @@ export const Nome = styled.Text`
     color: #000;
     font-style: italic;
 `;
+
+export const SubmitButton = styled.TouchableOpacity`
+    align-items: center;
+    justify-content: center;
+    background-color: #00b94a;
+    width: 90%;
+    height: 45px;
+    border-radius: 7px;
+    margin-bottom: 7px;
+`;
+
+export const SubmitText = styled.Text`
+    font-size: 17px;
+    color: #131313;
+`;

@@ -1,6 +1,7 @@
 import React, {createContext, useContext, useState} from 'react';
 import firebase from '../services/firebaseconnection';
 import { AuthContext } from './auth';
+import NotifyService from '../services/NotifyService';
 
 export const CrudContext = createContext({});
 
@@ -11,6 +12,8 @@ function CrudProvider({ children }){
     const [solosList, setSolosList] = useState([]);
     const [culturasList, setCulturasList] = useState([]);
     const [plantacoesList, setPlantacoesList] = useState([]);
+    const [nomeCultura, setNomeCultura] = useState('');
+    const notifyService = new NotifyService();
 
     async function handleAddSolo(nome, ph, composicao){
         setLoading(true);
@@ -137,19 +140,24 @@ function CrudProvider({ children }){
         });
       }
 
-      async function handleAddPlantacao(nome, localidade, quantidadeCultura, cultura, solo){
+      async function handleAddPlantacao(nome, localidade, quantidadeCultura, cultura, solo, horario){
         setLoading(true);
         let uid = user.uid;
+        let notifyUid = parseInt(new Date().getTime()/1000);
+        let horarioString = horario.getHours() +':'+horario.getMinutes();
         let key = await firebase.database().ref('plantacao').child(uid).push().key;
         await firebase.database().ref('plantacao').child(uid).child(key).set({
               nome: nome,
               localidade: localidade,
               quantidadeCultura: quantidadeCultura,
               cultura: cultura,
-              solo: solo
+              solo: solo,
+              horario: horarioString,
+              notifyUid: notifyUid
           })
           .then(()=>{
               alert('Plantação Cadastrada com sucesso!');
+              notifyService.scheduleNotify(notifyUid, nome, horario);
               setLoading(false);
           }).catch((error)=>{
               alert(error.code);
@@ -170,7 +178,8 @@ function CrudProvider({ children }){
                     localidade: childItem.val().localidade,
                     quantidadeCultura: childItem.val().quantidadeCultura,
                     cultura: childItem.val().cultura,
-                    solo: childItem.val().solo
+                    solo: childItem.val().solo,
+                    horario: childItem.val().horario
                 }
                 setPlantacoesList(oldArray => [...oldArray, list]);
             })
@@ -180,31 +189,59 @@ function CrudProvider({ children }){
 
       async function handleDeletePlantacao(key){
         let uid = user.uid;
+        let notifyUid = '';
+        await firebase.database().ref('plantacao').child(uid).child(key)
+        .once('value', (snapshot)=>{
+            notifyUid = snapshot.val().notifyUid;
+        });
         await firebase.database().ref('plantacao').child(uid).child(key).remove()
         .then(()=>{
-            alert('Plantação excluida com sucesso.')
+            notifyService.cancelNotify(notifyUid);
+            alert('Plantação excluida com sucesso.');
         }).catch((error)=>{
             alert(error.code);
         })
       }
 
-      async function handleUpdatePlantacao(nome, localidade, quantidadeCultura, cultura, solo, key){
+      async function handleUpdatePlantacao(nome, localidade, quantidadeCultura, cultura, solo, horario, key){
         setLoading(true);
         let uid = user.uid;
+        let horarioString = horario.getHours() +':'+horario.getMinutes();
+        let notifyUid = '';
+        await firebase.database().ref('plantacao').child(uid).child(key)
+        .once('value', (snapshot)=>{
+            notifyUid = snapshot.val().notifyUid;
+        });
+        notifyService.cancelNotify(notifyUid);
+        notifyUid = parseInt(new Date().getTime()/1000);
         await firebase.database().ref('plantacao').child(uid).child(key).set({
             nome: nome,
             localidade: localidade,
             quantidadeCultura: quantidadeCultura,
             cultura: cultura,
-            solo: solo
+            solo: solo,
+            horario: horarioString,
+            notifyUid: notifyUid
         })
         .then(()=>{
                 alert('Plantação Editada Com Sucesso.');
                 setLoading(false);
+                notifyService.scheduleNotify(notifyUid, nome, horario);
         }).catch((error)=> {
                 alert(error.code);
                 setLoading(false);
         });
+      }
+
+
+      async function getCulturaName(key){
+        let uid = user.uid;
+        let name = '';
+        await firebase.database().ref('cultura').child(uid).child(key)
+        .once('value', (snapshot)=>{
+            name = snapshot.val().nome;
+        });
+        setNomeCultura(name);
       }
 
     return(
@@ -213,7 +250,8 @@ function CrudProvider({ children }){
             handleDeleteSolo, handleUpdateSolo, handleAddCultura,
             handleLoadCultura, culturasList, handleDeleteCultura,
             handleUpdateCultura, handleLoadPlantacao, handleAddPlantacao,
-            handleDeletePlantacao, handleUpdatePlantacao, plantacoesList
+            handleDeletePlantacao, handleUpdatePlantacao, plantacoesList,
+            getCulturaName, nomeCultura
         }}>
             {children}
         </CrudContext.Provider>

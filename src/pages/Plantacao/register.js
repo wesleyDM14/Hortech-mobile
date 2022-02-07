@@ -19,6 +19,7 @@ import {
 import { Picker } from '@react-native-picker/picker';
 import {CrudContext} from '../../contexts/crud';
 import { useNavigation } from '@react-navigation/native';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 export default function RegisterPlantacao() {
 
@@ -27,6 +28,8 @@ export default function RegisterPlantacao() {
     const [quantidadeCultura, setQuantidadeCultura] = useState('');
     const [cultura, setCultura] = useState('');
     const [solo, setSolo] = useState('');
+    const [horario, setHorario] = useState(new Date());
+    const [show, setShow] = useState(false);
 
     const navigation = useNavigation();
     const { 
@@ -54,6 +57,12 @@ export default function RegisterPlantacao() {
       )
   });
 
+  let showDatePicker = (event, selectedTime)=>{
+    setShow(false);
+    const currentTime = selectedTime;
+    setHorario(currentTime);
+  }
+
     function handleSubmit(){
         Keyboard.dismiss();
         if(nome==''||localidade==''||quantidadeCultura==''||cultura==''||solo==''){
@@ -77,7 +86,7 @@ export default function RegisterPlantacao() {
     }
 
     async function handleAdd(){
-        await handleAddPlantacao(nome, localidade, quantidadeCultura, cultura, solo);
+        await handleAddPlantacao(nome, localidade, quantidadeCultura, cultura, solo, horario);
         navigation.goBack();
     }
 
@@ -157,6 +166,20 @@ export default function RegisterPlantacao() {
                             <Picker.Item label="Selecionar Solo" value='' />
                           {storedSolos}
                         </Picker>
+                        <SubmitButton onPress={()=>setShow(true)}>
+                            <SubmitText>Cadastrar Horário de Irrigação</SubmitText>
+                        </SubmitButton>
+                        {
+                            show && (
+                                <DateTimePicker
+                                    value={horario}
+                                    mode='time'
+                                    is24Hour={true}
+                                    display='default'
+                                    onChange={showDatePicker}
+                                />
+                            )
+                        }
                         <SubmitButton onPress={handleSubmit}>
                             <SubmitText>Cadastrar</SubmitText>
                         </SubmitButton>
