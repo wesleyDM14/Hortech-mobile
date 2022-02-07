@@ -5,10 +5,11 @@ import {
   Nome
 } from './styles';
 import Header from '../../components/Header';
-
 import { AuthContext } from '../../contexts/auth';
 
+
 export default function Home() {
+  constructor()
   const {user} = useContext(AuthContext);
   let userFristName = user.nome.split(' ')[0];
 

@@ -50,11 +50,24 @@ export const SubmitButton = styled.TouchableOpacity`
     width: 90%;
     height: 45px;
     border-radius: 7px;
+    margin-bottom: 7px;
 `;
 
 export const SubmitText = styled.Text`
     font-size: 17px;
     color: #131313;
+`;
+
+export const DicaButton = styled.TouchableOpacity`
+    align-items: center;
+    justify-content: center;
+`;
+
+export const EditContainer = styled.View`
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
 `;
 
 export const AddButton = styled.TouchableOpacity`
